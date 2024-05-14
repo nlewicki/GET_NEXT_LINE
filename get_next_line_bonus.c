@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 13:47:17 by nlewicki          #+#    #+#             */
-/*   Updated: 2024/04/10 16:10:30 by nlewicki         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:23:35 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static int	ft_search(char *save)
 {
@@ -48,30 +48,30 @@ static char	*ft_read(int fd, char *save)
 
 char	*get_next_line(int fd)
 {
-	static char	*save = NULL;
+	static char	*save[MAX_FD];
 	char		*line;
 	char		*tmp;
 	int			i;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (save == NULL)
-		save = ft_strdup("");
-	if (save == NULL)
+	if (save[fd] == NULL)
+		save[fd] = ft_strdup("");
+	if (save[fd] == NULL)
 		return (NULL);
-	save = ft_read(fd, save);
-	if (save == NULL)
+	save[fd] = ft_read(fd, save[fd]);
+	if (save[fd] == NULL)
 		return (NULL);
-	if (save[0] == '\0')
-		return (free(save), save = NULL, NULL);
-	i = ft_search(save);
-	line = ft_substr(save, 0, i + 1);
+	if (save[fd][0] == '\0')
+		return (free(save[fd]), save[fd] = NULL, NULL);
+	i = ft_search(save[fd]);
+	line = ft_substr(save[fd], 0, i + 1);
 	if (line == NULL)
-		return (free(save), save = NULL, NULL);
-	tmp = ft_substr(save, i + 1, ft_strlen(save));
+		return (free(save[fd]), save[fd] = NULL, NULL);
+	tmp = ft_substr(save[fd], i + 1, ft_strlen(save[fd]));
 	if (tmp == NULL)
-		return (free(save), save = NULL, free(line), line = NULL, NULL);
-	return (free(save), save = tmp, line);
+		return (free(save[fd]), save[fd] = NULL, free(line), line = NULL, NULL);
+	return (free(save[fd]), save[fd] = tmp, line);
 }
 
 // int	main(void)
